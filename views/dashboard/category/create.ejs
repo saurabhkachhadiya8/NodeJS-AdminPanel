@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Meta tags  -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+
+    <title>StarCodeKh - Create Category</title>
+
+    <%- include("../../upper") %>
+    <%- include("../../notification") %>
+    
+        <!-- Main Content Wrapper -->
+        <main class="main-content w-full px-[var(--margin-x)] pb-8">
+            <% if(!singleCategory){ %>
+                <form action="/dashboard/category_crud" method="post" enctype="multipart/form-data">
+                    <div
+                        class="flex flex-col items-center justify-between space-y-4 py-5 sm:flex-row sm:space-y-0 lg:py-6">
+                        <div class="flex items-center space-x-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
+                            </svg>
+                            <h2 class="text-xl font-medium text-slate-700 line-clamp-1 dark:text-navy-50">
+                                Create Category
+                            </h2>
+                        </div>
+                        <div class="flex justify-center space-x-2">
+                            <a href="/dashboard/category"
+                                class="btn min-w-[7rem] border border-slate-300 font-medium text-slate-700 hover:bg-slate-150 focus:bg-slate-150 active:bg-slate-150/80 dark:border-navy-450 dark:text-navy-100 dark:hover:bg-navy-500 dark:focus:bg-navy-500 dark:active:bg-navy-500/90">
+                                Preview
+                            </a>
+                            <button
+                                class="btn min-w-[7rem] bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
+                                type="submit">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
+                        <div class="col-span-12 lg:col-span-8">
+                            <div class="card">
+                                <div class="tabs flex flex-col">
+                                    <div class="tab-content p-4 sm:p-5">
+                                        <div class="space-y-5">
+                                            <label class="block">
+                                                <span class="font-medium text-slate-600 dark:text-navy-100">Title</span>
+                                                <input
+                                                    class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                                    placeholder="e.g. Electric category" type="text" name="title">
+                                            </label>
+                                            <div>
+                                                <span
+                                                    class="font-medium text-slate-600 dark:text-navy-100">Description</span>
+                                                <!-- Quill Editor Container -->
+                                                <div id="categoryeditor" style="height: 200px; background: #fff;"></div>
+                                                <!-- Textarea to Store Content -->
+                                                <input type="hidden" name="description" id="categorydescription">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-12 lg:col-span-4">
+                            <div class="card space-y-5 p-4 sm:p-5">
+                                <div>
+                                    <span class="font-medium text-slate-600 dark:text-navy-100">Image</span>
+                                    <div id="filepond" class="filepond fp-bordered fp-grid mt-1.5 [--fp-grid:2]">
+                                        <input type="file" id="categoryImage" name="category_image">
+                                        <span id="dragText" class="drag-text" style="font-size: larger;">Drag & Drop your file or
+                                            <u>Upload</u></span>
+                                        <div id="uploadedImages" class="uploaded-images"></div>
+                                    </div>
+                                </div>
+                                <label class="block">
+                                    <span class="font-medium text-slate-600 dark:text-navy-100">Tags</span>
+                                    <input class="mt-1.5 w-full" placeholder="Enter Tags"
+                                        x-init="$el._tom = new Tom($el,{plugins: ['restore_on_backspace','remove_button'],create: true})"
+                                        name="tags">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <% }else{ const {_id,title,description,image,tags}=singleCategory; %>
+                    <form action="/dashboard/category_crud?updateid=<%= _id %>" method="post" enctype="multipart/form-data">
+                    <div
+                        class="flex flex-col items-center justify-between space-y-4 py-5 sm:flex-row sm:space-y-0 lg:py-6">
+                        <div class="flex items-center space-x-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
+                            </svg>
+                            <h2 class="text-xl font-medium text-slate-700 line-clamp-1 dark:text-navy-50">
+                                Modify <span class="text-primary" style="font-size: 1.75rem;">
+                                    <%= title %>
+                                </span> Category
+                            </h2>
+                        </div>
+                        <div class="flex justify-center space-x-2">
+                            <a href="/dashboard/category"
+                                class="btn min-w-[7rem] border border-slate-300 font-medium text-slate-700 hover:bg-slate-150 focus:bg-slate-150 active:bg-slate-150/80 dark:border-navy-450 dark:text-navy-100 dark:hover:bg-navy-500 dark:focus:bg-navy-500 dark:active:bg-navy-500/90">
+                                Preview
+                            </a>
+                            <button
+                                class="btn min-w-[7rem] bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
+                                type="submit">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
+                        <div class="col-span-12 lg:col-span-8">
+                            <div class="card">
+                                <div class="tabs flex flex-col">
+                                    <div class="tab-content p-4 sm:p-5">
+                                        <div class="space-y-5">
+                                            <label class="block">
+                                                <span class="font-medium text-slate-600 dark:text-navy-100">Title</span>
+                                                <input
+                                                    class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                                    placeholder="e.g. Electric category" type="text" name="title"
+                                                    value="<%= title %>">
+                                            </label>
+                                            <div>
+                                                <span
+                                                    class="font-medium text-slate-600 dark:text-navy-100">Description</span>
+                                                <!-- Quill Editor Container -->
+                                                <div id="categoryeditor" style="height: 200px; background: #fff;"></div>
+                                                <!-- Textarea to Store Content -->
+                                                <input type="hidden" name="description" id="categorydescription"
+                                                    value="<%= description %>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-12 lg:col-span-4">
+                            <div class="card space-y-5 p-4 sm:p-5">
+                                <div>
+                                    <span class="font-medium text-slate-600 dark:text-navy-100">Image</span>
+                                    <div id="filepond" class="filepond fp-bordered fp-grid mt-1.5 [--fp-grid:2]">
+                                        <input type="file" id="categoryImage" name="category_image">
+                                        <% if(!image){ %>
+                                            <span id="dragText" class="drag-text" style="font-size: larger;">Drag & Drop your file or <u>Upload</u></span>
+                                        <% }else{ %>
+                                            <span id="dragText" class="drag-text" style="font-size: larger;">Replace your new file</span>
+                                        <% } %>
+                                        <div id="uploadedImages" class="uploaded-images"></div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col items-center justify-between pt-4 sm:flex-row sm:space-y-0 lg:py-1"
+                                    style="margin-top: 0;">
+                                    <div class="flex items-center space-x-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
+                                        </svg>
+                                        <h2 class="text-xl font-medium text-slate-700 line-clamp-1 dark:text-navy-50">
+                                            Subcategory
+                                        </h2>
+                                    </div>
+                                    <div class="flex justify-center space-x-2">
+                                        <a href="/dashboard/create_subcategory"
+                                            class="btn min-w-[7rem] border border-slate-300 font-medium text-slate-700 hover:bg-slate-150 focus:bg-slate-150 active:bg-slate-150/80 dark:border-navy-450 dark:text-navy-100 dark:hover:bg-navy-500 dark:focus:bg-navy-500 dark:active:bg-navy-500/90">
+                                            Create
+                                        </a>
+                                    </div>
+                                </div>
+                                <label class="block">
+                                    <span class="font-medium text-slate-600 dark:text-navy-100">Tags</span>
+                                    <input class="mt-1.5 w-full" placeholder="Enter Tags"
+                                        x-init="$el._tom = new Tom($el,{plugins: ['restore_on_backspace','remove_button'],create: true})"
+                                        name="tags" value="<%= tags %>">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center justify-end space-y-4 py-5 sm:flex-row sm:space-y-0 lg:py-6">
+                        <a href="/dashboard/delete_category?deleteid=<%= _id %>"
+                            class="btn min-w-[7rem] bg-error font-medium text-white hover:bg-error-focus focus:bg-error-focus active:bg-error-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">
+                            Delete Category
+                        </a>
+                    </div>
+                    </form>
+                    <% } %>
+        </main>
+
+        <%- include("../../lower") %>
